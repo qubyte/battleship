@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  display:
+    build: ./display
+    volumes:
+      - ./hw:/hw
+    depends_on:
+    - radar
+    - rt
+  radar:
+    build: ./radar
+    volumes:
+      - ./hw:/hw
+  rt:
+    build: ./rt
+    volumes:
+      - ./hw:/hw
