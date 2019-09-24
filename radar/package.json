@@ -1,0 +1,21 @@
+{
+  "name": "radar",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@qubyte/appended-file-watcher": "^0.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-qubyte": "^3.0.0",
+    "eventsource": "^1.0.7",
+    "mocha": "^6.2.0"
+  }
+}
