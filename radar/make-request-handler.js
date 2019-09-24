@@ -27,6 +27,10 @@ function makeHeartbeatMessage(res) {
   res.write('event: heartbeat\ndata: heartbeat\n\n');
 }
 
+// Make an HTTP request handler which monitors the given path for changes.
+// Upon changes, emit the end part of the file connected clients don't have.
+// On connection, send only what the client needs by using the SSE last-event-id
+// as a byte offset.
 function makeRequestHandler(hardwarePath) {
   const relay = new EventEmitter().setMaxListeners(Infinity);
 
@@ -53,6 +57,7 @@ function makeRequestHandler(hardwarePath) {
   pollStats();
 
   function requestHandler(req, res) {
+    // Send minimal HTML for non-events requests.
     if (req.url !== '/events') {
       return res
         .writeHead(200, { 'Content-Type': 'text/html' })
@@ -65,6 +70,7 @@ function makeRequestHandler(hardwarePath) {
 
     res.writeHead(200, { ...sseHeaders });
 
+    // SSE needs a newline after headers.
     res.write('\n');
 
     function onAppend() {
@@ -79,10 +85,12 @@ function makeRequestHandler(hardwarePath) {
       } catch (error) {
         makeErrorMessage(res, error);
       }
-
-      relay.once('append', onAppend);
     }
 
+    // Send new data as it comes in.
+    relay.on('append', onAppend);
+
+    // Send the initial set of data.
     onAppend();
 
     // Heartbeats are sent on a special event to keep the connection alive.
@@ -95,6 +103,8 @@ function makeRequestHandler(hardwarePath) {
     });
   }
 
+  // Use this to dispose of the request handler, otherwise the poll timeout will
+  // cause it to hang.
   requestHandler.close = function () {
     clearTimeout(timeout);
   };

@@ -9,6 +9,7 @@ Notes:
    known.
  - With more time I'd be tempted to have fun with the file parsing. I had some
    [fun with a similar task][aoc] in the last Advent of Code using Rust.
+ - The radar application has the most comprehensive code comments and tests.
 
 ## Quick start
 

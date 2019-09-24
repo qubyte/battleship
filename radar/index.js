@@ -14,6 +14,7 @@ server.listen(port, () => {
   console.log('Listening on port:', port); // eslint-disable-line no-console
 });
 
+// Docker uses SIGTERM, which Node has no default handler for. Add one here.
 process.on('SIGTERM', () => {
   handler.close();
   process.exit();
